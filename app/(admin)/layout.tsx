@@ -14,7 +14,7 @@ const AdminLayout = ({
       <div className="flex flex-col flex-1 lg:flex-row bg-gray-100">
         <Sidebar />
 
-        <div className="flex-1 flex justify-center lg:justify-start items-center max-w-5xl w-full mx-auto p-4">
+        <div className="flex-1 flex justify-center lg:justify-start mx-auto p-4 w-full">
           {children}
         </div>
       </div>

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Avatar from "./Avatar";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const Header = () => {
   return (
-    <header className="bg-white shadow-sm text-gray-800 flex justify-between p-5">
+    <header className="bg-white shadow-sm text-gray-800 flex justify-between items-center p-5">
       <Link href="/" className="flex items-center text-4xl font-thin">
         <Avatar seed="AI support bot" />
 
@@ -15,11 +16,12 @@ const Header = () => {
         </div>
       </Link>
 
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
+        <ThemeSwitcher />
+
         <SignedIn>
           <UserButton showName />
         </SignedIn>
-
         <SignedOut>
           <SignInButton />
         </SignedOut>
