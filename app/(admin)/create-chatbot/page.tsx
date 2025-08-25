@@ -35,11 +35,13 @@ const CreateChatBot = () => {
           created_at: new Date().toISOString(),
         },
       });
+
       setName("");
 
       const chatbot = result.data?.insertChatbots as
         | CreateChatbotMutation["insertChatbots"]
         | undefined;
+
       if (chatbot?.id) {
         router.push(`/edit-chatbot/${chatbot.id}`);
       }

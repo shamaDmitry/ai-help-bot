@@ -5,12 +5,17 @@ import Characteristic from "@/components/Characteristic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/graphql/apolloClient";
+import { DELETE_CHATBOT } from "@/graphql/mutations/mutations";
 import { GET_CHATBOT_BY_ID } from "@/graphql/queries/queries";
-import { GetChatbotByIdResponse, GetChatbotByIdVariables } from "@/types/types";
-import { useQuery } from "@apollo/client/react";
-import { Copy, X } from "lucide-react";
+import {
+  ChatbotCharacteristic,
+  GetChatbotByIdResponse,
+  GetChatbotByIdVariables,
+} from "@/types/types";
+import { useMutation, useQuery } from "@apollo/client/react";
+import { Copy, LoaderPinwheel, X } from "lucide-react";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { SyntheticEvent, use, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
@@ -19,7 +24,12 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
   const [chatbotName, setChatbotName] = useState("");
   const [newCharacteristic, setNewCharacteristic] = useState("");
 
-  const { data, loading, error } = useQuery<
+  const [deleteChatbot] = useMutation(DELETE_CHATBOT, {
+    refetchQueries: ["GetChatbotById"],
+    awaitRefetchQueries: true,
+  });
+
+  const { data, loading } = useQuery<
     GetChatbotByIdResponse,
     GetChatbotByIdVariables
   >(GET_CHATBOT_BY_ID, {
@@ -38,7 +48,34 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
     setUrl(url);
   }, [id]);
 
-  const handleUpdateChatbot = () => {};
+  const handleUpdateChatbot = (e: SyntheticEvent) => {
+    e.preventDefault();
+  };
+
+  // const promise = handleDelete(characteristic);
+
+  // toast.promise(promise, {
+  //   loading: "Removing characteristic...",
+  //   success: "Characteristic removed",
+  //   error: "Error removing characteristic",
+  // });
+
+  const handleDelete = async (id: number) => {
+    try {
+      const promise = deleteChatbot({
+        variables: { id: id },
+      });
+
+      toast.promise(promise, {
+        loading: "Deleting chatbot...",
+        success: "Chatbot deleted",
+        error: "Failed to delete chatbot",
+      });
+    } catch (error) {
+      console.error("error", error);
+      toast.error("Failed to delete chatbot");
+    }
+  };
 
   return (
     <section className="w-full">
@@ -69,6 +106,9 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
         <Button
           variant="destructive"
           className="absolute top-1 right-1 md:right-4 md:top-4"
+          onClick={() => {
+            handleDelete(id);
+          }}
         >
           <X className="size-4" />
         </Button>
@@ -93,15 +133,10 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
           Heres what your AI knows...
         </h2>
 
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis
-          excepturi vitae repellat atque facere. Quod omnis nisi libero
-          recusandae dolorem facere, amet repellendus natus sunt optio ad
-          consectetur eligendi deserunt!
-        </p>
+        <p>Your chatbot knows the following instructions.</p>
 
         <div className="mt-5">
-          <form className="flex gap-3">
+          <form className="flex gap-3 mb-4">
             <Input
               type="text"
               placeholder="Example: If customer asks for prices, provide pricing page: example.com/pricing"
@@ -114,15 +149,20 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
             </Button>
           </form>
 
-          <ul>
-            {data?.chatbots.chatbot_characteristics.map((item) => {
-              return (
-                <li key={item.id}>
-                  <Characteristic characteristic={item} />
-                </li>
-              );
-            })}
-          </ul>
+          <div className="flex flex-wrap gap-4">
+            {loading && (
+              <div className="flex items-center justify-center w-full py-4">
+                <LoaderPinwheel className="animate-spin text-primary size-8" />
+              </div>
+            )}
+
+            {!loading &&
+              data?.chatbots.chatbot_characteristics.map(
+                (item: ChatbotCharacteristic) => {
+                  return <Characteristic key={item.id} characteristic={item} />;
+                }
+              )}
+          </div>
         </div>
       </div>
     </section>

@@ -1,10 +1,34 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_CHATBOT = gql`
-  mutation CreateChatbot($clerk_user_id: String!, $name: String!, $created_at: DateTime!) {
-    insertChatbots(created_at: $created_at, name: $name, clerk_user_id: $clerk_user_id) {
+  mutation CreateChatbot(
+    $clerk_user_id: String!
+    $name: String!
+    $created_at: DateTime!
+  ) {
+    insertChatbots(
+      created_at: $created_at
+      name: $name
+      clerk_user_id: $clerk_user_id
+    ) {
       id
       name
+    }
+  }
+`;
+
+export const REMOVE_CHARACTERISTIC = gql`
+  mutation RemoveCharacteristic($id: Int!) {
+    deleteChatbot_characteristics(id: $id) {
+      id
+    }
+  }
+`;
+
+export const DELETE_CHATBOT = gql`
+  mutation DeleteChatbots($id: Int!) {
+    deleteChatbots(id: $id) {
+      id
     }
   }
 `;
