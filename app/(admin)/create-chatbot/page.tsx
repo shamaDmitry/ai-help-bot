@@ -78,7 +78,9 @@ const CreateChatBot = () => {
             required
           />
 
-          <Button>Create bot</Button>
+          <Button type="submit" disabled={loading || !name}>
+            {loading ? "Creating bot..." : "Create bot"}
+          </Button>
         </form>
       </CardContent>
     </Card>
