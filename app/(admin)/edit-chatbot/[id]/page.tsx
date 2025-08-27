@@ -5,7 +5,10 @@ import Characteristic from "@/components/Characteristic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/graphql/apolloClient";
-import { DELETE_CHATBOT } from "@/graphql/mutations/mutations";
+import {
+  ADD_CHARACTERISTIC,
+  DELETE_CHATBOT,
+} from "@/graphql/mutations/mutations";
 import { GET_CHATBOT_BY_ID } from "@/graphql/queries/queries";
 import {
   ChatbotCharacteristic,
@@ -15,6 +18,7 @@ import {
 import { useMutation, useQuery } from "@apollo/client/react";
 import { Copy, LoaderPinwheel, X } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { SyntheticEvent, use, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -29,7 +33,11 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
     awaitRefetchQueries: true,
   });
 
-  const { data, loading } = useQuery<
+  const [addCharacteristic] = useMutation(ADD_CHARACTERISTIC, {
+    refetchQueries: ["GetChatbotById"],
+  });
+
+  const { data, loading, error } = useQuery<
     GetChatbotByIdResponse,
     GetChatbotByIdVariables
   >(GET_CHATBOT_BY_ID, {
@@ -76,6 +84,34 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
       toast.error("Failed to delete chatbot");
     }
   };
+
+  const handleAddCharacteristic = async (content: string) => {
+    try {
+      const promise = addCharacteristic({
+        variables: { chatbotId: Number(id), content },
+      });
+
+      toast.promise(promise, {
+        loading: "Adding characteristic...",
+        success: "Characteristic added",
+        error: "Failed to add characteristic",
+      });
+    } catch (error) {
+      toast.error("Failed to add characteristic", error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center w-full py-4">
+        <LoaderPinwheel className="animate-spin text-primary size-8" />
+      </div>
+    );
+  }
+
+  if (error) return <p>Error: {error.message}</p>;
+
+  if (!data?.chatbots) return redirect("/view-chatbots");
 
   return (
     <section className="w-full">
@@ -136,7 +172,14 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
         <p>Your chatbot knows the following instructions.</p>
 
         <div className="mt-5">
-          <form className="flex gap-3 mb-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAddCharacteristic(newCharacteristic);
+              setNewCharacteristic("");
+            }}
+            className="flex gap-3 mb-4"
+          >
             <Input
               type="text"
               placeholder="Example: If customer asks for prices, provide pricing page: example.com/pricing"

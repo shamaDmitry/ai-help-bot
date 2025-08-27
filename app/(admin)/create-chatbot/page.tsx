@@ -22,8 +22,6 @@ const CreateChatBot = () => {
     CreateChatbotVariables
   >(CREATE_CHATBOT);
 
-  console.log({ data, loading, error });
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -50,42 +48,42 @@ const CreateChatBot = () => {
     }
   };
 
-  if (!user) {
-    return null;
-  }
+  console.log({ data, loading, error });
 
   return (
-    <Card>
-      <CardContent>
-        <div className="flex flex-col items-center justify-center md:flex-row w-full gap-4 mb-4">
-          <Avatar seed="create-chatbot" />
+    <div className="w-full">
+      <Card>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center md:flex-row w-full gap-4 mb-4">
+            <Avatar seed="create-chatbot" />
 
-          <div>
-            <h1 className="text-xl lg:text-3xl font-semibold">Create</h1>
+            <div>
+              <h1 className="text-xl lg:text-3xl font-semibold">Create</h1>
 
-            <h2 className="font-light">
-              Create your own chatbot with ease using our intuitive interface.
-            </h2>
+              <h2 className="font-light">
+                Create your own chatbot with ease using our intuitive interface.
+              </h2>
+            </div>
           </div>
-        </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex gap-4 md:flex-row flex-col"
-        >
-          <Input
-            placeholder="Chatbot Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <form
+            onSubmit={handleSubmit}
+            className="flex gap-4 md:flex-row flex-col"
+          >
+            <Input
+              placeholder="Chatbot Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
 
-          <Button type="submit" disabled={loading || !name}>
-            {loading ? "Creating bot..." : "Create bot"}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+            <Button type="submit" disabled={loading || !name}>
+              {loading ? "Creating bot..." : "Create bot"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -10,8 +10,6 @@ export const BASE_URL =
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000";
 
-console.log("BASE_URL", BASE_URL);
-
 const httpLink = createHttpLink({
   uri: `${BASE_URL}/api/graphql`,
 });
