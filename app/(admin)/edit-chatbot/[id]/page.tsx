@@ -8,6 +8,7 @@ import { BASE_URL } from "@/graphql/apolloClient";
 import {
   ADD_CHARACTERISTIC,
   DELETE_CHATBOT,
+  UPDATE_CHATBOT,
 } from "@/graphql/mutations/mutations";
 import { GET_CHATBOT_BY_ID } from "@/graphql/queries/queries";
 import {
@@ -37,6 +38,10 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
     refetchQueries: ["GetChatbotById"],
   });
 
+  const [updateChatbot] = useMutation(UPDATE_CHATBOT, {
+    refetchQueries: ["GetChatbotById"],
+  });
+
   const { data, loading, error } = useQuery<
     GetChatbotByIdResponse,
     GetChatbotByIdVariables
@@ -58,6 +63,20 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
 
   const handleUpdateChatbot = (e: SyntheticEvent) => {
     e.preventDefault();
+
+    try {
+      const promise = updateChatbot({
+        variables: { id: Number(id), name: chatbotName },
+      });
+
+      toast.promise(promise, {
+        loading: "Updating chatbot...",
+        success: "Chatbot updated",
+        error: "Failed to update chatbot",
+      });
+    } catch (error) {
+      toast.error("Failed to update chatbot");
+    }
   };
 
   // const promise = handleDelete(characteristic);
@@ -88,7 +107,11 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
   const handleAddCharacteristic = async (content: string) => {
     try {
       const promise = addCharacteristic({
-        variables: { chatbotId: Number(id), content },
+        variables: {
+          chatbotId: Number(id),
+          content,
+          created_at: new Date().toISOString(),
+        },
       });
 
       toast.promise(promise, {
@@ -97,7 +120,7 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
         error: "Failed to add characteristic",
       });
     } catch (error) {
-      toast.error("Failed to add characteristic", error);
+      toast.error("Failed to add characteristic");
     }
   };
 
