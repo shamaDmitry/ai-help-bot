@@ -12,8 +12,8 @@ const menu = [
   },
   {
     id: uuidv4(),
-    label: "View Chatbot",
-    href: "/view-chatbot",
+    label: "View Chatbots",
+    href: "/view-chatbots",
     icon: <BotMessageSquare className="size-6 lg:size-8" />,
   },
   {
@@ -26,7 +26,7 @@ const menu = [
 
 const Sidebar = () => {
   return (
-    <div className="bg-white text-white p-5">
+    <div className="text-white p-5">
       <ul className="gap-5 flex flex-row lg:flex-col">
         {menu.map((item) => {
           return (

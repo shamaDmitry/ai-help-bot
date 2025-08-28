@@ -4,6 +4,7 @@ import Avatar from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import LoadingButton from "@/components/ui/loading-button";
 import { CREATE_CHATBOT } from "@/graphql/mutations/mutations";
 import { CreateChatbotMutation, CreateChatbotVariables } from "@/types/graphql";
 import { useMutation } from "@apollo/client/react";
@@ -77,9 +78,14 @@ const CreateChatBot = () => {
               required
             />
 
-            <Button type="submit" disabled={loading || !name}>
-              {loading ? "Creating bot..." : "Create bot"}
-            </Button>
+            <LoadingButton
+              type="submit"
+              isLoading={loading}
+              loadingLabel="Creating bot..."
+              disabled={loading || !name}
+            >
+              Create bot
+            </LoadingButton>
           </form>
         </CardContent>
       </Card>

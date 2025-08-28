@@ -3,13 +3,10 @@
 import Avatar from "@/components/Avatar";
 import Characteristic from "@/components/Characteristic";
 import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/graphql/apolloClient";
-import {
-  ADD_CHARACTERISTIC,
-  DELETE_CHATBOT,
-  UPDATE_CHATBOT,
-} from "@/graphql/mutations/mutations";
+import { DELETE_CHATBOT, UPDATE_CHATBOT } from "@/graphql/mutations/mutations";
 import { GET_CHATBOT_BY_ID } from "@/graphql/queries/queries";
 import {
   ChatbotCharacteristic,
@@ -17,28 +14,26 @@ import {
   GetChatbotByIdVariables,
 } from "@/types/types";
 import { useMutation, useQuery } from "@apollo/client/react";
-import { Copy, LoaderPinwheel, X } from "lucide-react";
+import { Copy, X } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { SyntheticEvent, use, useEffect, useState } from "react";
 import { toast } from "sonner";
+import AddCharacteristicForm from "@/components/ui/edit-chatbot/add-characteristic-form";
+import LoadingOverlay from "@/components/ui/loading-overlay";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import { redirect } from "next/navigation";
 
 const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
   const { id } = use(params);
   const [url, setUrl] = useState("");
   const [chatbotName, setChatbotName] = useState("");
-  const [newCharacteristic, setNewCharacteristic] = useState("");
 
-  const [deleteChatbot] = useMutation(DELETE_CHATBOT, {
+  const [deleteChatbot, { loading: isDeleting }] = useMutation(DELETE_CHATBOT, {
     refetchQueries: ["GetChatbotById"],
     awaitRefetchQueries: true,
   });
 
-  const [addCharacteristic] = useMutation(ADD_CHARACTERISTIC, {
-    refetchQueries: ["GetChatbotById"],
-  });
-
-  const [updateChatbot] = useMutation(UPDATE_CHATBOT, {
+  const [updateChatbot, { loading: isUpdating }] = useMutation(UPDATE_CHATBOT, {
     refetchQueries: ["GetChatbotById"],
   });
 
@@ -74,18 +69,10 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
         success: "Chatbot updated",
         error: "Failed to update chatbot",
       });
-    } catch (error) {
+    } catch {
       toast.error("Failed to update chatbot");
     }
   };
-
-  // const promise = handleDelete(characteristic);
-
-  // toast.promise(promise, {
-  //   loading: "Removing characteristic...",
-  //   success: "Characteristic removed",
-  //   error: "Error removing characteristic",
-  // });
 
   const handleDelete = async (id: number) => {
     try {
@@ -98,43 +85,14 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
         success: "Chatbot deleted",
         error: "Failed to delete chatbot",
       });
-    } catch (error) {
-      console.error("error", error);
+    } catch {
       toast.error("Failed to delete chatbot");
     }
   };
 
-  const handleAddCharacteristic = async (content: string) => {
-    try {
-      const promise = addCharacteristic({
-        variables: {
-          chatbotId: Number(id),
-          content,
-          created_at: new Date().toISOString(),
-        },
-      });
-
-      toast.promise(promise, {
-        loading: "Adding characteristic...",
-        success: "Characteristic added",
-        error: "Failed to add characteristic",
-      });
-    } catch (error) {
-      toast.error("Failed to add characteristic");
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center w-full py-4">
-        <LoaderPinwheel className="animate-spin text-primary size-8" />
-      </div>
-    );
-  }
-
   if (error) return <p>Error: {error.message}</p>;
 
-  if (!data?.chatbots) return redirect("/view-chatbots");
+  console.log("isUpdating", isUpdating);
 
   return (
     <section className="w-full">
@@ -162,15 +120,18 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
       </div>
 
       <div className="relative mt-5 bg-white p-5 md:p-10 rounded-lg">
-        <Button
+        <LoadingButton
           variant="destructive"
           className="absolute top-1 right-1 md:right-4 md:top-4"
           onClick={() => {
             handleDelete(id);
+            redirect("/create-chatbot");
           }}
+          isLoading={isDeleting}
+          loadingLabel="Deleting"
         >
           <X className="size-4" />
-        </Button>
+        </LoadingButton>
 
         <div className="flex gap-4">
           <Avatar seed={chatbotName} />
@@ -184,7 +145,13 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
               onChange={(e) => setChatbotName(e.target.value)}
             />
 
-            <Button type="submit">Update</Button>
+            <LoadingButton
+              type="submit"
+              isLoading={isUpdating}
+              loadingLabel="Saving"
+            >
+              Update
+            </LoadingButton>
           </form>
         </div>
 
@@ -195,42 +162,39 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
         <p>Your chatbot knows the following instructions.</p>
 
         <div className="mt-5">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleAddCharacteristic(newCharacteristic);
-              setNewCharacteristic("");
-            }}
-            className="flex gap-3 mb-4"
-          >
-            <Input
-              type="text"
-              placeholder="Example: If customer asks for prices, provide pricing page: example.com/pricing"
-              value={newCharacteristic}
-              onChange={(e) => setNewCharacteristic(e.target.value)}
-            />
+          <AddCharacteristicForm id={id} />
 
-            <Button type="submit" disabled={!newCharacteristic}>
-              Add
-            </Button>
-          </form>
-
-          <div className="flex flex-wrap gap-4">
-            {loading && (
-              <div className="flex items-center justify-center w-full py-4">
-                <LoaderPinwheel className="animate-spin text-primary size-8" />
+          <div className="flex">
+            {data?.chatbots.chatbot_characteristics.length === 0 && (
+              <div className="w-full py-4 text-sm text-muted-foreground">
+                No characteristics yet — add one to get started.
               </div>
             )}
 
-            {!loading &&
-              data?.chatbots.chatbot_characteristics.map(
+            <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+              {loading && (
+                <div className="size-full absolute flex items-center justify-center z-50 cursor-not-allowed bg-sidebar-accent left-0 top-0 rounded">
+                  <LoadingSpinner className="text-blue-500 size-9" />
+                </div>
+              )}
+
+              {data?.chatbots.chatbot_characteristics.map(
                 (item: ChatbotCharacteristic) => {
                   return <Characteristic key={item.id} characteristic={item} />;
                 }
               )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* {(isAdding || isUpdating || isDeleting) && (
+        <LoadingOverlay
+          message={
+            isAdding ? "Adding..." : isUpdating ? "Updating..." : "Deleting..."
+          }
+        />
+      )} */}
     </section>
   );
 };

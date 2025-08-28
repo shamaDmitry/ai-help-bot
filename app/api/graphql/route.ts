@@ -34,14 +34,7 @@ export async function POST(request: NextRequest) {
 
     const data = results.data;
 
-    return NextResponse.json(
-      {
-        data,
-      },
-      {
-        headers: corsHeaders,
-      }
-    );
+    return NextResponse.json({ data }, { headers: corsHeaders });
   } catch (error) {
     console.log("error", error);
 
