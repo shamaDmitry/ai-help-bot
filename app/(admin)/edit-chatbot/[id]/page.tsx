@@ -91,8 +91,6 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
 
   if (error) return <p>Error: {error.message}</p>;
 
-  console.log("isUpdating", isUpdating);
-
   return (
     <section className="w-full">
       <div className="flex flex-col md:flex-row items-start">
