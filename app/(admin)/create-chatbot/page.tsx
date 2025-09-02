@@ -49,8 +49,6 @@ const CreateChatBot = () => {
     }
   };
 
-  console.log({ data, loading, error });
-
   return (
     <div className="w-full">
       <Card>
