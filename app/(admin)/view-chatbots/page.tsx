@@ -5,19 +5,22 @@ import { GET_CHATBOTS_BY_USER } from "@/graphql/queries/queries";
 import { serverClient } from "@/lib/server/serverClient";
 import { Chatbot, GetChatbotByUserData } from "@/types/types";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 const ViewChatbots = async () => {
   const { userId } = await auth();
-  if (!userId) return;
+  if (!userId) redirect("/?message=login");
 
   // TODO get Chatbots by user
   const { data, error } = await serverClient.query<GetChatbotByUserData>({
     query: GET_CHATBOTS_BY_USER,
     variables: { clerk_user_id: userId },
   });
+
+  console.log({ data, error });
 
   const sortedChatbots: Chatbot[] = [...(data?.chatbotsByUser || [])].sort(
     (a, b) =>

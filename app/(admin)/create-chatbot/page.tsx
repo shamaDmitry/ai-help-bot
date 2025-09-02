@@ -1,7 +1,6 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/ui/loading-button";
@@ -22,6 +21,8 @@ const CreateChatBot = () => {
     CreateChatbotMutation,
     CreateChatbotVariables
   >(CREATE_CHATBOT);
+
+  console.log({ data, loading, error });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeContext";
 import ApolloProviderWrapper from "@/components/ApolloProvider";
 import { Toaster } from "@/components/ui/sonner";
+import ShowMessageToast from "@/components/ShowMessageToast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +37,9 @@ export default function RootLayout({
             <body
               className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex`}
             >
+              <Suspense fallback={null}>
+                <ShowMessageToast />
+              </Suspense>
               {children}
 
               <Toaster position="top-center" />
