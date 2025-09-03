@@ -1,3 +1,5 @@
+import ChatbotSessions from "@/components/ChatbotSessions";
+import Title from "@/components/Title";
 import { Card, CardContent } from "@/components/ui/card";
 import { GET_USER_CHATBOTS } from "@/graphql/queries/queries";
 import { serverClient } from "@/lib/server/serverClient";
@@ -25,8 +27,14 @@ const ReviewSessions = async () => {
     <div className="w-full">
       <Card>
         <CardContent>
-          ReviewSessions dassad
-          {process.env.NEXT_PUBLIC_VERCEL_ENV}
+          <Title>Chat sessions</Title>
+
+          <p>
+            Review all the chat sessions the chat bots have had with your
+            customers.
+          </p>
+
+          <ChatbotSessions chatbots={data?.chatbotsByUser || []} />
         </CardContent>
       </Card>
     </div>

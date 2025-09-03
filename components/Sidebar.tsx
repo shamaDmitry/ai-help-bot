@@ -1,4 +1,4 @@
-import { BotMessageSquare } from "lucide-react";
+import { Bot, BotMessageSquare } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +15,12 @@ const menu = [
     label: "View Chatbots",
     href: "/view-chatbots",
     icon: <BotMessageSquare className="size-6 lg:size-8" />,
+  },
+  {
+    id: uuidv4(),
+    label: "Review sessions",
+    href: "/review-sessions",
+    icon: <Bot className="size-6 lg:size-8" />,
   },
   {
     id: uuidv4(),

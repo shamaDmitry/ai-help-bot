@@ -14,15 +14,16 @@ const ViewChatbots = async () => {
   const { userId } = await auth();
   if (!userId) redirect("/?message=login");
 
-  // TODO get Chatbots by user
   const { data, error } = await serverClient.query<GetChatbotByUserData>({
     query: GET_CHATBOTS_BY_USER,
-    variables: { clerk_user_id: userId },
+    variables: {
+      userId,
+    },
   });
 
-  console.log({ data, error });
+  if (error) console.error("GraphQL error fetching chatbots:", error);
 
-  const sortedChatbots: Chatbot[] = [...(data?.chatbotsByUser || [])].sort(
+  const sortedChatbots: Chatbot[] = [...(data?.chatbotsByUser ?? [])].sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
@@ -52,10 +53,7 @@ const ViewChatbots = async () => {
                       className="w-full"
                     >
                       <div className="border p-4 rounded hover:bg-accent cursor-pointer flex items-center gap-4 flex-col md:flex-row text-center md:text-left">
-                        <Avatar
-                          seed={chatbot.id.toString()}
-                          className="size-16"
-                        />
+                        <Avatar seed={chatbot.name} className="size-16" />
 
                         <div>
                           <h2 className="font-bold text-lg">{chatbot.name}</h2>

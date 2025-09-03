@@ -61,3 +61,11 @@ export interface GetUserChatbotsResponse {
 export interface GetUserChatbotsVariables {
   userId: string;
 }
+
+export interface GetChatSessionMessagesResponse {
+  chat_session: ChatSession;
+}
+
+export interface GetChatSessionMessagesVariables {
+  id: number;
+}
