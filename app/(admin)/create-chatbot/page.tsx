@@ -17,12 +17,10 @@ const CreateChatBot = () => {
 
   const router = useRouter();
 
-  const [createChatBot, { data, loading, error }] = useMutation<
+  const [createChatBot, { loading }] = useMutation<
     CreateChatbotMutation,
     CreateChatbotVariables
   >(CREATE_CHATBOT);
-
-  console.log({ data, loading, error });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
