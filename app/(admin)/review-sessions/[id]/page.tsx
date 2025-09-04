@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { Messages } from "@/components/Messages";
 import Title from "@/components/Title";
 import { Card, CardContent } from "@/components/ui/card";
 import { GET_CHAT_SESSION_MESSAGES } from "@/graphql/queries/queries";
@@ -11,16 +12,6 @@ import {
 
 const ReviewSession = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
-
-  // data: {
-  //   chat_sessions: {
-  //     id: chatSessionId,
-  //     created_at,
-  //     messages,
-  //     chatbots: { name },
-  //     guests: { name: guestName, email },
-  //   },
-  // },
 
   const { data, error } = await serverClient.query<
     GetChatSessionMessagesResponse,
@@ -37,9 +28,10 @@ const ReviewSession = async ({ params }: { params: { id: string } }) => {
       <Card>
         <CardContent>
           <Title>Session Review</Title>
+
           {data?.chat_sessions && (
-            <>
-              <p className="text-xs text-gray-300">
+            <div className="mb-4">
+              <p className="text-xs text-gray-500">
                 Started at{" "}
                 {new Date(data.chat_sessions.created_at).toLocaleString()}
               </p>
@@ -55,8 +47,14 @@ const ReviewSession = async ({ params }: { params: { id: string } }) => {
                   {data.chat_sessions.guests.email})
                 </span>
               </p>
-            </>
+            </div>
           )}
+
+          <Messages
+            messages={data!.chat_sessions.messages}
+            chatbotName={data!.chat_sessions.chatbots.name}
+            guest={data!.chat_sessions.guests}
+          />
         </CardContent>
       </Card>
     </div>

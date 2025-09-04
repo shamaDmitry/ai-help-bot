@@ -33,13 +33,13 @@ const menu = [
 const Sidebar = () => {
   return (
     <div className="text-white p-5">
-      <ul className="gap-5 flex flex-row lg:flex-col">
+      <ul className="gap-5 flex flex-row flex-wrap lg:flex-col">
         {menu.map((item) => {
           return (
             <li className="flex-1" key={item.id}>
               <Link
                 href={item.href}
-                className="hover:opacity-50 flex flex-col text-center lg:text-left lg:flex-row items-center gap-2 p-5 rounded-md bg-blue-500 flex-1 h-full justify-center"
+                className="hover:opacity-50 flex flex-col text-center lg:text-left lg:flex-row items-center gap-2 p-5 rounded-md bg-blue-500 flex-1 h-full justify-center text-xs lg:text-base"
               >
                 {item.icon}
                 {item.label}
