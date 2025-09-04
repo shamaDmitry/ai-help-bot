@@ -31,7 +31,7 @@ const ViewChatbots = async () => {
   return (
     <div className="w-full">
       <Card className="min-h-full">
-        <CardContent>
+        <CardContent className="w-full">
           <div className="flex gap-4 flex-col">
             {sortedChatbots.length === 0 && (
               <div className="flex gap-4 items-center justify-between">

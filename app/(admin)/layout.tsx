@@ -11,8 +11,6 @@ const AdminLayout = async ({
 }>) => {
   const { userId } = await auth();
 
-  console.log("userId", userId);
-
   if (!userId) {
     return redirect("/login");
   }
