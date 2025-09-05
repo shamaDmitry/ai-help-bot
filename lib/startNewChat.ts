@@ -6,7 +6,7 @@ import {
 } from "@/graphql/mutations/mutations";
 import { gql } from "@apollo/client";
 
-async function startNewChat(
+export async function startNewChat(
   guestName: string,
   guestEmail: string,
   chatbotId: number
@@ -15,19 +15,27 @@ async function startNewChat(
     // 1. Create a new guest entry
     const guestResult = await client.mutate({
       mutation: INSERT_GUEST,
-      variables: { name: guestName, email: guestEmail },
+      variables: { name: guestName, email: guestEmail, created_at: new Date() },
     });
-    const guestId = guestResult.data.insertGuest.id;
+
+    const guestData = guestResult.data as { insertGuests: { id: number } };
+    const guestId = guestData.insertGuests.id;
+
+    console.log("guestId", guestId);
 
     // 2. Init a new chat session
     const chatSessionResult = await client.mutate({
       mutation: INSERT_CHAT_SESSION,
-      variables: {},
+      variables: { created_at: new Date() },
     });
-    const chatSessionId = chatSessionResult.data.insertChat_sessions.id;
+
+    const chatSessionData = chatSessionResult.data as {
+      insertChat_sessions: { id: number };
+    };
+    const chatSessionId = chatSessionData.insertChat_sessions.id;
+    console.log("chatSessionResult", chatSessionResult);
 
     // 3. Insert initial message
-
     await client.mutate({
       mutation: INSERT_MESSAGE,
       variables: {
@@ -36,6 +44,10 @@ async function startNewChat(
         content: `Hello! ${guestName}!\n How can I assist you today?`,
       },
     });
+
+    console.log("New chat session started with ID:", chatSessionId);
+
+    return chatSessionId;
   } catch (error) {
     console.error(error);
   }

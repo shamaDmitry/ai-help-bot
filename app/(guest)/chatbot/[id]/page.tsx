@@ -23,21 +23,26 @@ import Avatar from "@/components/Avatar";
 import { Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@apollo/client/react";
-import { GET_MESSAGES_BY_CHAT_SESSION_ID } from "@/graphql/queries/queries";
 import {
+  GET_CHATBOT_BY_ID,
+  GET_MESSAGES_BY_CHAT_SESSION_ID,
+} from "@/graphql/queries/queries";
+import {
+  GetChatbotByIdResponse,
   Message,
   MessagesByChatSessionIdResponse,
   MessagesByChatSessionIdVariables,
 } from "@/types/types";
+import { startNewChat } from "@/lib/startNewChat";
 
 function ChatbotPage() {
   const params = useParams();
   const { id } = params;
 
-  const [userName, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [userName, setName] = useState("ded");
+  const [email, setEmail] = useState("ded@ded.com");
   const [loading, setLoading] = useState(false);
-  const [chatId, setChatId] = useState<number | null>(0);
+  const [chatId, setChatId] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -66,21 +71,27 @@ function ChatbotPage() {
 
     const chatId = await startNewChat(userName, email, Number(id));
 
-    setChatId(chatId);
+    // setChatId(chatId);
     setIsOpen(false);
   };
+
+  const { data: chatBotData } = useQuery<GetChatbotByIdResponse>(
+    GET_CHATBOT_BY_ID,
+    {
+      variables: { id: Number(id) },
+    }
+  );
 
   return (
     <div className="w-full max-w-xl mx-auto h-screen p-10">
       <Card className="min-h-full">
         <CardHeader className="flex flex-row items-center">
-          <div className="flex items-center space-x-4">
-            <Avatar className="size-8" />
+          <div className="flex items-center justify-center w-full gap-4">
+            <Avatar seed={chatBotData?.chatbots?.name} className="size-8" />
 
-            <div>
-              <p className="text-sm font-medium leading-none">Sofia Davis</p>
-              <p className="text-sm text-muted-foreground">m@example.com</p>
-            </div>
+            <p className="text-sm font-medium leading-none">
+              {chatBotData?.chatbots?.name}
+            </p>
           </div>
         </CardHeader>
 
@@ -91,7 +102,7 @@ function ChatbotPage() {
                 key={index}
                 className={cn(
                   "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                  message.role === "user"
+                  message.sender === "user"
                     ? "ml-auto bg-primary text-primary-foreground"
                     : "bg-muted"
                 )}
