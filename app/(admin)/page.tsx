@@ -1,3 +1,5 @@
+import Title from "@/components/Title";
+
 export default function Home() {
   return (
     <main className="">
@@ -8,13 +10,13 @@ export default function Home() {
           2
         )}
       </pre>
+
       <pre>{JSON.stringify(process.env.VERCEL_ENV, null, 2)}</pre>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur
-        quis dolore natus placeat consequuntur, perferendis hic aliquid
-        architecto quasi, numquam rem quos corporis deserunt consectetur illum
-        recusandae ipsa dolorum itaque.
-      </p>
+
+      <Title>
+        Welcome to AI Help Bot! Build and deploy AI chatbots for your website in
+        minutes.
+      </Title>
     </main>
   );
 }
