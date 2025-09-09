@@ -54,7 +54,7 @@ function ChatbotPage() {
     MessagesByChatSessionIdResponse,
     MessagesByChatSessionIdVariables
   >(GET_MESSAGES_BY_CHAT_SESSION_ID, {
-    variables: { chat_session_id: chatId },
+    variables: { chat_session_id: Number(chatId) },
     skip: !chatId,
   });
 
@@ -71,7 +71,9 @@ function ChatbotPage() {
 
     const chatId = await startNewChat(userName, email, Number(id));
 
-    // setChatId(chatId);
+    console.log("chatId", chatId);
+
+    setChatId(chatId || 0);
     setIsOpen(false);
   };
 

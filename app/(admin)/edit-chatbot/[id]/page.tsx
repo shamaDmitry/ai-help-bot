@@ -171,7 +171,11 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
           <p className="text-sm italic text-white">Share link</p>
 
           <div className="flex gap-3">
-            <Link href={url} className="w-full cursor-pointer hover:opacity-50">
+            <Link
+              href={url}
+              target="_blank"
+              className="w-full cursor-pointer hover:opacity-50"
+            >
               <Input value={url} readOnly className="cursor-pointer bg-white" />
             </Link>
 
