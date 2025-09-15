@@ -34,17 +34,39 @@ import {
   MessagesByChatSessionIdVariables,
 } from "@/types/types";
 import { startNewChat } from "@/lib/startNewChat";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+  message: z.string().min(2, "Message is required"),
+});
 
 function ChatbotPage() {
   const params = useParams();
   const { id } = params;
 
-  const [userName, setName] = useState("ded");
+  const [userName, setUserName] = useState("ded");
   const [email, setEmail] = useState("ded@ded.com");
   const [loading, setLoading] = useState(false);
   const [chatId, setChatId] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      message: "",
+    },
+  });
 
   const {
     loading: loadingQuery,
@@ -84,6 +106,19 @@ function ChatbotPage() {
     }
   );
 
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log("data", data);
+    setLoading(true);
+
+    form.reset();
+
+    if (!userName || !email) {
+      setIsOpen(true);
+      setLoading(false);
+      return;
+    }
+  };
+
   return (
     <div className="w-full max-w-xl mx-auto h-screen p-10">
       <Card className="min-h-full">
@@ -116,38 +151,37 @@ function ChatbotPage() {
         </CardContent>
 
         <CardFooter>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              // if (inputLength === 0) return;
-              // setMessages([
-              //   ...messages,
-              //   {
-              //     role: "user",
-              //     content: input,
-              //   },
-              // ]);
-              // setInput("");
-            }}
-            className="flex w-full items-center space-x-2"
-          >
-            <Input
-              id="message"
-              placeholder="Type your message..."
-              className="flex-1"
-              autoComplete="off"
-              // value={input}
-              // onChange={(event) => setInput(event.target.value)}
-            />
-            <Button
-              type="submit"
-              size="icon"
-              // disabled={inputLength === 0}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex gap-4 w-full"
             >
-              <Send />
-              <span className="sr-only">Send</span>
-            </Button>
-          </form>
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel hidden>message</FormLabel>
+
+                    <FormControl>
+                      <Input
+                        placeholder="Type your message..."
+                        {...field}
+                        className="w-full"
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" size="icon">
+                <Send />
+                <span className="sr-only">Send</span>
+              </Button>
+            </form>
+          </Form>
         </CardFooter>
       </Card>
 
@@ -172,7 +206,7 @@ function ChatbotPage() {
                   id="name"
                   placeholder="Name"
                   value={userName}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setUserName(e.target.value)}
                 />
               </div>
 

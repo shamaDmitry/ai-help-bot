@@ -53,7 +53,9 @@ const ViewChatbots = async () => {
                       className="w-full"
                     >
                       <div className="border p-4 rounded hover:bg-accent cursor-pointer flex items-center gap-4 flex-col md:flex-row text-center md:text-left">
-                        <Avatar seed={chatbot.name} className="size-16" />
+                        <div className="p-2 bg-accent dark:bg-gray-500 rounded-full">
+                          <Avatar seed={chatbot.name} className="size-16" />
+                        </div>
 
                         <div>
                           <h2 className="font-bold text-lg">{chatbot.name}</h2>

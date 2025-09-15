@@ -15,7 +15,7 @@ export default function ThemeSwitcher() {
       {themes.map((t) => (
         <button
           key={t.value}
-          className={`px-3 py-1 rounded border text-sm transition-colors duration-150 ${
+          className={`cursor-pointer px-3 py-1 rounded border text-sm transition-colors duration-150 ${
             theme === t.value
               ? "bg-primary text-primary-foreground border-primary"
               : "bg-card text-foreground border-border hover:bg-muted"
