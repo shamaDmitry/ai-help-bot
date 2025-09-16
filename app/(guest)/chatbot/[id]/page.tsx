@@ -45,6 +45,7 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   message: z.string().min(2, "Message is required"),
@@ -80,6 +81,8 @@ function ChatbotPage() {
     skip: !chatId,
   });
 
+  console.log("loadingQuery", loadingQuery);
+
   useEffect(() => {
     if (data) {
       setMessages(data.chat_sessions?.messages);
@@ -107,7 +110,6 @@ function ChatbotPage() {
   );
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("data", data);
     setLoading(true);
 
     const { message } = data;
@@ -170,7 +172,9 @@ function ChatbotPage() {
         });
       });
     } catch (error) {
+      alert("Error sending message");
       console.log("Error sending message:", error);
+      toast.error("Error sending message");
     }
   };
 
@@ -187,21 +191,23 @@ function ChatbotPage() {
           </div>
         </CardHeader>
 
-        <CardContent className="flex-1">
+        <CardContent className="flex-1 py-4">
           <div className="space-y-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                  message.sender === "user"
-                    ? "ml-auto bg-primary text-primary-foreground"
-                    : "bg-muted"
-                )}
-              >
-                {message.content}
-              </div>
-            ))}
+            {messages.map((message, index) => {
+              return (
+                <div
+                  key={index}
+                  className={cn(
+                    "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
+                    message.sender === "user"
+                      ? "ml-auto bg-primary text-primary-foreground"
+                      : "bg-muted"
+                  )}
+                >
+                  {message.content}
+                </div>
+              );
+            })}
           </div>
         </CardContent>
 

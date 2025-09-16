@@ -44,7 +44,7 @@ export async function startNewChat(
       variables: {
         chat_session_id: chatSessionId,
         sender: "ai",
-        content: `Hello! ${guestName}!\n How can I assist you today?`,
+        content: `Hello! <span>${guestName}</span>!\n How can I assist you today?`,
         created_at: new Date(),
       },
     });
