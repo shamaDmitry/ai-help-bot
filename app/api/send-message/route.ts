@@ -55,8 +55,6 @@ export async function POST(request: NextRequest) {
       .map((c) => c.content)
       .join(" + ");
 
-    console.log("systemPrompt", systemPrompt);
-
     const messages: ChatCompletionMessageParam[] = [
       {
         role: "system",
@@ -70,8 +68,10 @@ export async function POST(request: NextRequest) {
     // 3) send the messages to OpenAI
     const openaiResponse = await openai.chat.completions.create({
       messages: messages,
-      model: "gpt-4.1-mini",
+      model: "gpt-5",
     });
+
+    console.log("openaiResponse", JSON.stringify(openaiResponse, null, 2));
 
     const aiResponse = openaiResponse?.choices?.[0]?.message?.content?.trim();
 

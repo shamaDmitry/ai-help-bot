@@ -158,6 +158,10 @@ function ChatbotPage() {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error();
+      }
+
       const result = await response.json();
 
       setMessages((prevMessages) => {
@@ -172,9 +176,7 @@ function ChatbotPage() {
         });
       });
     } catch (error) {
-      alert("Error sending message");
-      console.log("Error sending message:", error);
-      toast.error("Error sending message");
+      toast.error(`Error sending message: ${JSON.stringify(error)}`);
     }
   };
 

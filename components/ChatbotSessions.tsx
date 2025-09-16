@@ -50,7 +50,7 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
                   </div>
                 </AccordionTrigger>
 
-                <AccordionContent>
+                <AccordionContent className="flex flex-col gap-4">
                   {chatbot.chat_sessions.map((session) => {
                     return (
                       <Link

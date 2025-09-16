@@ -21,8 +21,6 @@ const ReviewSessions = async () => {
     variables: { userId: userId },
   });
 
-  console.log("data", data);
-
   return (
     <div className="w-full">
       <Card>
