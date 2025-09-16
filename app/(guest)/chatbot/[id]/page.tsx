@@ -86,7 +86,7 @@ function ChatbotPage() {
     }
   }, [data]);
 
-  const handleFormSubmit = async (e: FormEvent) => {
+  const handleInfoFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     setLoading(true);
@@ -110,6 +110,8 @@ function ChatbotPage() {
     console.log("data", data);
     setLoading(true);
 
+    const { message } = data;
+
     form.reset();
 
     if (!userName || !email) {
@@ -117,12 +119,65 @@ function ChatbotPage() {
       setLoading(false);
       return;
     }
+
+    if (!message.trim()) {
+      return;
+    }
+
+    const userMessage: Message = {
+      id: Date.now(),
+      content: message,
+      created_at: new Date().toISOString(),
+      chat_session_id: chatId,
+      sender: "user",
+    };
+
+    const loadingMessage: Message = {
+      id: Date.now() + 1,
+      content: "Thinking...",
+      created_at: new Date().toISOString(),
+      chat_session_id: chatId,
+      sender: "ai",
+    };
+
+    setMessages((prev) => [...prev, userMessage, loadingMessage]);
+
+    try {
+      const response = await fetch("/api/send-message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: userName,
+          chat_session_id: chatId,
+          chatbot_id: Number(id),
+          content: message,
+        }),
+      });
+
+      const result = await response.json();
+
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg) => {
+          return msg.id === loadingMessage.id
+            ? {
+                ...msg,
+                content: result.content,
+                id: result.id,
+              }
+            : msg;
+        });
+      });
+    } catch (error) {
+      console.log("Error sending message:", error);
+    }
   };
 
   return (
     <div className="w-full max-w-xl mx-auto h-screen p-10">
-      <Card className="min-h-full">
-        <CardHeader className="flex flex-row items-center">
+      <Card className="min-h-full h-full overflow-y-auto relative gap-0 py-0 border-accent">
+        <CardHeader className="bg-accent p-4 flex flex-row items-center sticky top-0 left-0">
           <div className="flex items-center justify-center w-full gap-4">
             <Avatar seed={chatBotData?.chatbots?.name} className="size-8" />
 
@@ -150,7 +205,7 @@ function ChatbotPage() {
           </div>
         </CardContent>
 
-        <CardFooter>
+        <CardFooter className="sticky bottom-0 left-0 bg-accent p-4">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -176,7 +231,13 @@ function ChatbotPage() {
                 )}
               />
 
-              <Button type="submit" size="icon">
+              <Button
+                type="submit"
+                size="icon"
+                disabled={
+                  form.formState.isSubmitting || !form.formState.isValid
+                }
+              >
                 <Send />
                 <span className="sr-only">Send</span>
               </Button>
@@ -187,7 +248,7 @@ function ChatbotPage() {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
-          <form onSubmit={handleFormSubmit}>
+          <form onSubmit={handleInfoFormSubmit}>
             <DialogHeader className="mb-5 ">
               <DialogTitle className="text-center">
                 Lets help you out!
