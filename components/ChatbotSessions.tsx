@@ -59,11 +59,11 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
                         className="py-7 p-7 bg-secondary flex flex-col rounded-lg relative"
                       >
                         <p className="text-lg font-bold">
-                          {session.guests.name || "Anonymous"}
+                          {session.guests?.name || "Anonymous"}
                         </p>
 
                         <p className="text-sm font-light">
-                          {session.guests.email || "No email provided"}
+                          {session.guests?.email || "No email provided"}
                         </p>
 
                         <div className="absolute right-3 top-2 text-sm">

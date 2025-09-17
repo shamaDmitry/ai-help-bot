@@ -9,12 +9,10 @@ import {
   GetChatSessionMessagesResponse,
 } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import { ChatCompletionMessageParam } from "groq-sdk/resources/chat/completions.mjs";
+import Groq from "groq-sdk";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(request: NextRequest) {
   const { name, chat_session_id, chatbot_id, content } = await request.json();
@@ -59,21 +57,19 @@ export async function POST(request: NextRequest) {
       {
         role: "system",
         name: "system",
-        content: `You are ${chatBot.name}. You are a helpful assistant talking to ${name}. Answer as concisely as possible. If you don't know the answer, just say that you don't know, don't try to make up an answer. Here are some key information that you need to be aware of, these are elements you may be asked about: ${systemPrompt}`,
+        content: `You are ${chatBot.name}. You are a helpful assistant talking to ${name}. Answer as concisely as possible. Use emojis if you can. If you don't know the answer, just say that you don't know, don't try to make up an answer. Here are some key information that you need to be aware of, these are elements you may be asked about: ${systemPrompt}`,
       },
       ...formattedPreviousMessages,
       { role: "user", name: name, content: content },
     ];
 
-    // 3) send the messages to OpenAI
-    const openaiResponse = await openai.chat.completions.create({
+    // 3) send the messages to AI
+    const groqAIResponse = await groq.chat.completions.create({
       messages: messages,
-      model: "gpt-5",
+      model: "openai/gpt-oss-20b",
     });
 
-    console.log("openaiResponse", JSON.stringify(openaiResponse, null, 2));
-
-    const aiResponse = openaiResponse?.choices?.[0]?.message?.content?.trim();
+    const aiResponse = groqAIResponse?.choices?.[0]?.message?.content?.trim();
 
     if (!aiResponse) {
       return NextResponse.json(
@@ -83,30 +79,32 @@ export async function POST(request: NextRequest) {
     }
 
     // 4) save the user's message in database
-    await serverClient.mutate({
+    const { data: userMessage } = await serverClient.mutate({
       mutation: INSERT_MESSAGE,
       variables: {
         chat_session_id,
         content,
         sender: "user",
+        created_at: new Date().toISOString(),
       },
     });
 
     // 5) save the AI's response in database
-    const aiMessageResult = await serverClient.mutate<{
-      insertMessage: { id: number };
+    const { data: aiMessage } = await serverClient.mutate<{
+      insertMessages: { id: number };
     }>({
       mutation: INSERT_MESSAGE,
       variables: {
         chat_session_id,
         content: aiResponse,
         sender: "ai",
+        created_at: new Date().toISOString(),
       },
     });
 
-    // 6) return the AI's response to the client
+    // 6) ) the AI's response to the client
     return NextResponse.json({
-      id: aiMessageResult?.data?.insertMessage?.id,
+      id: aiMessage?.insertMessages?.id,
       content: aiResponse,
     });
   } catch (error) {

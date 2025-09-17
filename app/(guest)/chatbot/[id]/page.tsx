@@ -12,7 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/card";
 import Avatar from "@/components/Avatar";
 import { Send } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@apollo/client/react";
 import {
   GET_CHATBOT_BY_ID,
@@ -46,6 +45,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import ChatMessage from "@/components/ChatMessage";
 
 const formSchema = z.object({
   message: z.string().min(2, "Message is required"),
@@ -55,12 +55,19 @@ function ChatbotPage() {
   const params = useParams();
   const { id } = params;
 
-  const [userName, setUserName] = useState("ded");
-  const [email, setEmail] = useState("ded@ded.com");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [chatId, setChatId] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
+  const messageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messageRef.current) {
+      messageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,19 +76,13 @@ function ChatbotPage() {
     },
   });
 
-  const {
-    loading: loadingQuery,
-    error,
-    data,
-  } = useQuery<
+  const { data } = useQuery<
     MessagesByChatSessionIdResponse,
     MessagesByChatSessionIdVariables
   >(GET_MESSAGES_BY_CHAT_SESSION_ID, {
     variables: { chat_session_id: Number(chatId) },
     skip: !chatId,
   });
-
-  console.log("loadingQuery", loadingQuery);
 
   useEffect(() => {
     if (data) {
@@ -95,8 +96,6 @@ function ChatbotPage() {
     setLoading(true);
 
     const chatId = await startNewChat(userName, email, Number(id));
-
-    console.log("chatId", chatId);
 
     setChatId(chatId || 0);
     setIsOpen(false);
@@ -177,13 +176,14 @@ function ChatbotPage() {
       });
     } catch (error) {
       toast.error(`Error sending message: ${JSON.stringify(error)}`);
+      console.log("messages", messages);
     }
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto h-screen p-10">
+    <div className="w-full max-w-4xl mx-auto h-screen p-10">
       <Card className="min-h-full h-full overflow-y-auto relative gap-0 py-0 border-accent">
-        <CardHeader className="bg-accent p-4 flex flex-row items-center sticky top-0 left-0">
+        <CardHeader className="z-50 bg-accent p-4 flex flex-row items-center sticky top-0 left-0">
           <div className="flex items-center justify-center w-full gap-4">
             <Avatar seed={chatBotData?.chatbots?.name} className="size-8" />
 
@@ -195,22 +195,19 @@ function ChatbotPage() {
 
         <CardContent className="flex-1 py-4">
           <div className="space-y-4">
-            {messages.map((message, index) => {
+            {messages.map((message) => {
               return (
-                <div
-                  key={index}
-                  className={cn(
-                    "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                    message.sender === "user"
-                      ? "ml-auto bg-primary text-primary-foreground"
-                      : "bg-muted"
-                  )}
-                >
-                  {message.content}
-                </div>
+                <ChatMessage
+                  guest={{ name: userName, email: email }}
+                  key={message.id}
+                  message={message}
+                  chatbotName={chatBotData?.chatbots?.name || "AI"}
+                />
               );
             })}
           </div>
+
+          <div ref={messageRef} />
         </CardContent>
 
         <CardFooter className="sticky bottom-0 left-0 bg-accent p-4">
@@ -254,7 +251,7 @@ function ChatbotPage() {
         </CardFooter>
       </Card>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={() => setIsOpen(true)}>
         <DialogContent>
           <form onSubmit={handleInfoFormSubmit}>
             <DialogHeader className="mb-5 ">
@@ -297,7 +294,7 @@ function ChatbotPage() {
                 disabled={!userName || !email || loading}
                 className="w-full sm:w-auto"
               >
-                Save changes
+                {loading ? "Loading..." : "Save changes"}
               </Button>
             </DialogFooter>
           </form>
