@@ -93,7 +93,7 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
 
   return (
     <section className="w-full">
-      <div className="flex flex-col md:flex-row items-start">
+      <div className="flex flex-col md:flex-row items-start gap-4">
         <div className="relative bg-white p-5 md:p-10 rounded-lg flex-1">
           <LoadingButton
             variant="destructive"

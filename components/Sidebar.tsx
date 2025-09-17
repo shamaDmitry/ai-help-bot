@@ -32,7 +32,7 @@ const menu = [
 
 const Sidebar = () => {
   return (
-    <div className="text-white p-5">
+    <div className="text-white p-4">
       <ul className="gap-5 flex flex-row flex-wrap lg:flex-col">
         {menu.map((item) => {
           return (
