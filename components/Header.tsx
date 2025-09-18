@@ -2,12 +2,15 @@ import Link from "next/link";
 import Avatar from "./Avatar";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import ThemeSwitcher from "./ThemeSwitcher";
+import { shadcn } from "@clerk/themes";
 
 const Header = () => {
   return (
-    <header className="bg-white shadow-sm text-gray-800 flex justify-between items-center p-5">
-      <Link href="/" className="flex items-center text-4xl font-thin">
-        <Avatar seed="AI support bot" />
+    <header className="shadow-sm text-primary flex justify-between items-center p-3 flex-col gap-3 md:flex-row">
+      <Link href="/" className="flex items-center text-4xl font-thin gap-2">
+        <div className="p-2 bg-accent rounded-full border shadow-md">
+          <Avatar seed="AI support bot" />
+        </div>
 
         <div className="space-y-1">
           <h1>AiBot</h1>
@@ -19,12 +22,20 @@ const Header = () => {
       <div className="flex items-center gap-4">
         <ThemeSwitcher />
 
-        <SignedIn>
-          <UserButton showName />
-        </SignedIn>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
+        <div className="">
+          <SignedIn>
+            <UserButton
+              showName
+              appearance={{
+                theme: shadcn,
+              }}
+            />
+          </SignedIn>
+
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+        </div>
       </div>
     </header>
   );

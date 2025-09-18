@@ -24,6 +24,12 @@ interface ChatbotSessionsProps {
 const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
   if (!chatbots) return null;
 
+  if (chatbots.length === 0) {
+    return (
+      <p className="p-4 bg-muted my-4 font-medium">No chat sessions found.</p>
+    );
+  }
+
   return (
     <Accordion type="single" collapsible>
       {chatbots.map((chatbot) => {
@@ -51,30 +57,36 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
                 </AccordionTrigger>
 
                 <AccordionContent className="flex flex-col gap-4">
-                  {chatbot.chat_sessions.map((session) => {
-                    return (
-                      <Link
-                        key={session.id}
-                        href={`/review-sessions/${session.id}`}
-                        className="py-7 p-7 bg-secondary flex flex-col rounded-lg relative"
-                      >
-                        <p className="text-lg font-bold">
-                          {session.guests?.name || "Anonymous"}
-                        </p>
+                  {chatbot.chat_sessions
+                    .sort(
+                      (a, b) =>
+                        new Date(b.created_at).getTime() -
+                        new Date(a.created_at).getTime()
+                    )
+                    .map((session) => {
+                      return (
+                        <Link
+                          key={session.id}
+                          href={`/review-sessions/${session.id}`}
+                          className="py-7 p-7 bg-secondary flex flex-col rounded-lg relative"
+                        >
+                          <p className="text-lg font-bold">
+                            {session.guests?.name || "Anonymous"}
+                          </p>
 
-                        <p className="text-sm font-light">
-                          {session.guests?.email || "No email provided"}
-                        </p>
+                          <p className="text-sm font-light">
+                            {session.guests?.email || "No email provided"}
+                          </p>
 
-                        <div className="absolute right-3 top-2 text-sm">
-                          <ReactTimeAgo
-                            date={new Date(session.created_at)}
-                            locale="en-US"
-                          />
-                        </div>
-                      </Link>
-                    );
-                  })}
+                          <div className="absolute right-3 top-2 text-sm">
+                            <ReactTimeAgo
+                              date={new Date(session.created_at)}
+                              locale="en-US"
+                            />
+                          </div>
+                        </Link>
+                      );
+                    })}
                 </AccordionContent>
               </>
             ) : (
@@ -83,13 +95,6 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
           </AccordionItem>
         );
       })}
-
-      {/* <AccordionItem value="item-1">
-        <AccordionTrigger>Is it accessible?</AccordionTrigger>
-        <AccordionContent>
-          Yes. It adheres to the WAI-ARIA design pattern.
-        </AccordionContent>
-      </AccordionItem> */}
     </Accordion>
   );
 };

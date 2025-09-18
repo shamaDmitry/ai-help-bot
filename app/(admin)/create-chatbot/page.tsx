@@ -50,7 +50,7 @@ const CreateChatBot = () => {
 
   return (
     <div className="w-full">
-      <Card>
+      <Card className="max-w-2xl mx-auto">
         <CardContent>
           <div className="flex flex-col items-center justify-center md:flex-row w-full gap-4 mb-4">
             <Avatar seed="create-chatbot" />

@@ -22,12 +22,6 @@ const menu = [
     href: "/review-sessions",
     icon: <Bot className="size-6 lg:size-8" />,
   },
-  {
-    id: uuidv4(),
-    label: "Review Chatbot",
-    href: "/review-chatbot",
-    icon: <BotMessageSquare className="size-6 lg:size-8" />,
-  },
 ];
 
 const Sidebar = () => {

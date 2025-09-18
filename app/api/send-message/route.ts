@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       {
         role: "system",
         name: "system",
-        content: `You are ${chatBot.name}. You are a helpful assistant talking to ${name}. Answer as concisely as possible. Use emojis if you can. If you don't know the answer, just say that you don't know, don't try to make up an answer. Here are some key information that you need to be aware of, these are elements you may be asked about: ${systemPrompt}`,
+        content: `You are ${chatBot.name}. You are a helpful assistant talking to ${name}. Answer as concisely as possible. You can learn from customer. Use emojis if you can. Here are some key information that you need to be aware of, these are elements you may be asked about: ${systemPrompt}`,
       },
       ...formattedPreviousMessages,
       { role: "user", name: name, content: content },
