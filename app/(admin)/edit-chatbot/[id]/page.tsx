@@ -1,6 +1,5 @@
 "use client";
 
-import Avatar from "@/components/Avatar";
 import Characteristic from "@/components/Characteristic";
 import { Button } from "@/components/ui/button";
 import LoadingButton from "@/components/ui/loading-button";
@@ -21,6 +20,8 @@ import { toast } from "sonner";
 import AddCharacteristicForm from "@/components/ui/edit-chatbot/add-characteristic-form";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { redirect } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar } from "@/components/Avatar";
 
 const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
   const { id } = use(params);
@@ -94,81 +95,84 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
   return (
     <section className="w-full">
       <div className="flex flex-col md:flex-row items-start gap-4">
-        <div className="relative bg-white p-5 md:p-10 rounded-lg flex-1">
-          <LoadingButton
-            variant="destructive"
-            className="absolute top-1 right-1 md:right-4 md:top-4"
-            onClick={() => {
-              handleDelete(id);
-              redirect("/create-chatbot");
-            }}
-            isLoading={isDeleting}
-            loadingLabel="Deleting"
-          >
-            <X className="size-4" />
-          </LoadingButton>
+        <Card className="relative flex-1">
+          <CardContent>
+            <div className="flex gap-4 items-center">
+              <Avatar seed={chatbotName} />
 
-          <div className="flex gap-4">
-            <Avatar seed={chatbotName} />
+              <form
+                onSubmit={handleUpdateChatbot}
+                className="flex flex-1 gap-3 items-center"
+              >
+                <Input
+                  value={chatbotName}
+                  onChange={(e) => setChatbotName(e.target.value)}
+                />
 
-            <form
-              onSubmit={handleUpdateChatbot}
-              className="flex flex-1 gap-3 items-center"
-            >
-              <Input
-                value={chatbotName}
-                onChange={(e) => setChatbotName(e.target.value)}
-              />
+                <LoadingButton
+                  type="submit"
+                  isLoading={isUpdating}
+                  loadingLabel="Saving"
+                >
+                  Update
+                </LoadingButton>
+              </form>
 
               <LoadingButton
-                type="submit"
-                isLoading={isUpdating}
-                loadingLabel="Saving"
+                variant="destructive"
+                className=""
+                onClick={() => {
+                  handleDelete(id);
+                  redirect("/create-chatbot");
+                }}
+                isLoading={isDeleting}
+                loadingLabel="Deleting"
               >
-                Update
+                <X className="size-4" />
               </LoadingButton>
-            </form>
-          </div>
+            </div>
 
-          <h2 className="text-xl font-bold mt-10 mb-3">
-            Heres what your AI knows...
-          </h2>
+            <h2 className="text-xl font-bold mt-10 mb-3">
+              Heres what your AI knows...
+            </h2>
 
-          <p>Your chatbot knows the following instructions.</p>
+            <p>Your chatbot knows the following instructions.</p>
 
-          <div className="mt-5">
-            <AddCharacteristicForm id={id} />
+            <div className="mt-5">
+              <AddCharacteristicForm id={id} className="mb-10" />
 
-            <div className="flex">
-              {data?.chatbots.chatbot_characteristics.length === 0 && (
-                <div className="w-full py-4 text-sm text-muted-foreground">
-                  No characteristics yet — add one to get started.
-                </div>
-              )}
-
-              <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 w-full">
-                {loading && (
-                  <div className="size-full absolute flex items-center justify-center z-50 cursor-not-allowed bg-sidebar-accent left-0 top-0 rounded min-h-36">
-                    <LoadingSpinner className="text-blue-500 size-9" />
+              <div className="flex">
+                {data?.chatbots.chatbot_characteristics.length === 0 && (
+                  <div className="w-full py-4 text-sm text-muted-foreground">
+                    No characteristics yet — add one to get started.
                   </div>
                 )}
 
-                {data?.chatbots.chatbot_characteristics.map(
-                  (item: ChatbotCharacteristic) => {
-                    return (
-                      <Characteristic key={item.id} characteristic={item} />
-                    );
-                  }
-                )}
+                <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+                  {loading && (
+                    <div className="size-full col-span-2 flex items-center justify-center z-50 cursor-not-allowed bg-sidebar-accent rounded min-h-36">
+                      <LoadingSpinner className="text-sidebar-accent-foreground size-9" />
+                    </div>
+                  )}
+
+                  {!loading &&
+                    data?.chatbots.chatbot_characteristics.map(
+                      (item: ChatbotCharacteristic) => {
+                        return (
+                          <Characteristic key={item.id} characteristic={item} />
+                        );
+                      }
+                    )}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="order-first md:order-none md:sticky md:top-0 z-50 md:max-w-sm space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-blue-500 w-full">
-          <h1 className="text-white text-sm font-bold">Link to Chat</h1>
+        <div className="order-first md:order-none md:sticky md:top-0 z-50 md:max-w-sm space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-primary text-primary-foreground w-full">
+          <h1 className="text-sm font-bold">Link to Chat</h1>
 
-          <p className="text-sm italic text-white">Share link</p>
+          <p className="text-sm italic">Share link</p>
 
           <div className="flex gap-3">
             <Link
@@ -176,10 +180,11 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
               target="_blank"
               className="w-full cursor-pointer hover:opacity-50"
             >
-              <Input value={url} readOnly className="cursor-pointer bg-white" />
+              <Input value={url} readOnly className="cursor-pointer" />
             </Link>
 
             <Button
+              className="bg-secondary"
               onClick={() => {
                 navigator.clipboard.writeText(url);
 

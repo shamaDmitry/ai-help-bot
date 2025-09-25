@@ -8,7 +8,7 @@ interface AvatarProps {
   className?: string;
 }
 
-const Avatar: FC<AvatarProps> = ({ seed, className }) => {
+export const Avatar: FC<AvatarProps> = ({ seed, className }) => {
   const avatar = createAvatar(rings, { seed });
 
   const svg = avatar.toString();
@@ -27,5 +27,3 @@ const Avatar: FC<AvatarProps> = ({ seed, className }) => {
     />
   );
 };
-
-export default Avatar;

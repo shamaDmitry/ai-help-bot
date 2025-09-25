@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import Avatar from "./Avatar";
+import { Avatar } from "./Avatar";
 import { Guest, Message } from "@/types/types";
 import { User } from "lucide-react";
 import ReactMarkdown from "react-markdown";

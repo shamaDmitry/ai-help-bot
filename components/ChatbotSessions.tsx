@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Avatar from "@/components/Avatar";
+import { Avatar } from "@/components/Avatar";
 import Link from "next/link";
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from "javascript-time-ago";

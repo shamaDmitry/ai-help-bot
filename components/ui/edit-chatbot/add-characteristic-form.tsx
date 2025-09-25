@@ -6,12 +6,17 @@ import { FC, useState } from "react";
 import { toast } from "sonner";
 import LoadingButton from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface AddCharacteristicFormProps {
   id: number;
+  className?: string;
 }
 
-const AddCharacteristicForm: FC<AddCharacteristicFormProps> = ({ id }) => {
+const AddCharacteristicForm: FC<AddCharacteristicFormProps> = ({
+  id,
+  className,
+}) => {
   const [newCharacteristic, setNewCharacteristic] = useState("");
 
   const [addCharacteristic, { loading: isAdding }] = useMutation(
@@ -49,7 +54,7 @@ const AddCharacteristicForm: FC<AddCharacteristicFormProps> = ({ id }) => {
           handleAddCharacteristic(newCharacteristic);
           setNewCharacteristic("");
         }}
-        className="flex gap-3 mb-4"
+        className={cn("flex gap-3", className)}
       >
         <Input
           type="text"
@@ -60,7 +65,7 @@ const AddCharacteristicForm: FC<AddCharacteristicFormProps> = ({ id }) => {
 
         <LoadingButton
           type="submit"
-          disabled={!newCharacteristic}
+          disabled={!newCharacteristic.length}
           isLoading={isAdding}
           loadingLabel="Adding"
         >

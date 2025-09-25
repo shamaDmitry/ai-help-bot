@@ -30,7 +30,7 @@ const Characteristic: FC<CharacteristicProps> = ({ characteristic }) => {
   };
 
   return (
-    <div className="relative p-10 bg-white border rounded-md">
+    <div className="relative py-2.5 px-4 border rounded-md">
       {characteristic.content}
 
       <Button

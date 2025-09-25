@@ -1,4 +1,4 @@
-import Avatar from "@/components/Avatar";
+import { Avatar } from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { GET_CHATBOTS_BY_USER } from "@/graphql/queries/queries";

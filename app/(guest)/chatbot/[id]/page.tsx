@@ -19,7 +19,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import Avatar from "@/components/Avatar";
+import { Avatar } from "@/components/Avatar";
 import { Send } from "lucide-react";
 import { useQuery } from "@apollo/client/react";
 import {

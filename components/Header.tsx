@@ -1,8 +1,7 @@
 import Link from "next/link";
-import Avatar from "./Avatar";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { shadcn } from "@clerk/themes";
+import { Avatar } from "./Avatar";
 
 const Header = () => {
   return (
@@ -24,12 +23,7 @@ const Header = () => {
 
         <div className="">
           <SignedIn>
-            <UserButton
-              showName
-              appearance={{
-                theme: shadcn,
-              }}
-            />
+            <UserButton showName />
           </SignedIn>
 
           <SignedOut>

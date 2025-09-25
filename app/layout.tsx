@@ -8,6 +8,7 @@ import { ThemeProvider } from "../components/ThemeContext";
 import ApolloProviderWrapper from "@/components/ApolloProvider";
 import { Toaster } from "@/components/ui/sonner";
 import ShowMessageToast from "@/components/ShowMessageToast";
+import { shadcn } from "@clerk/themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,13 +32,17 @@ export default function RootLayout({
 }>) {
   return (
     <ApolloProviderWrapper>
-      <ClerkProvider>
+      <ClerkProvider
+        appearance={{
+          theme: shadcn,
+        }}
+      >
         <ThemeProvider>
           <html lang="en">
             <body
               className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex`}
             >
-              <Suspense fallback={null}>
+              <Suspense fallback={<div>Loading...</div>}>
                 <ShowMessageToast />
               </Suspense>
               {children}
