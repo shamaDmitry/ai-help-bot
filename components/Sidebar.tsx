@@ -1,7 +1,7 @@
-import { Bot, BotMessageSquare } from "lucide-react";
-import Link from "next/link";
+import { Bot, BotMessageSquare, Palette } from "lucide-react";
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import ClientLink from "./ClientLink";
 
 const menu = [
   {
@@ -22,22 +22,25 @@ const menu = [
     href: "/review-sessions",
     icon: <Bot className="size-6 lg:size-8" />,
   },
+  {
+    id: uuidv4(),
+    label: "Colors",
+    href: "/ds",
+    icon: <Palette className="size-6 lg:size-8" />,
+  },
 ];
 
 const Sidebar = () => {
   return (
-    <div className="p-4">
+    <div className="p-4 bg-sidebar">
       <ul className="gap-5 flex flex-row flex-wrap lg:flex-col">
         {menu.map((item) => {
           return (
             <li className="flex-1" key={item.id}>
-              <Link
-                href={item.href}
-                className="hover:opacity-50 flex flex-col text-center lg:text-left lg:flex-row items-center gap-2 p-5 rounded-md bg-primary text-primary-foreground flex-1 h-full justify-center text-xs lg:text-base"
-              >
+              <ClientLink href={item.href}>
                 {item.icon}
                 {item.label}
-              </Link>
+              </ClientLink>
             </li>
           );
         })}
