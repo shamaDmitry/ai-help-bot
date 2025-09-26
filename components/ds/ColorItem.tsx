@@ -14,9 +14,15 @@ const ColorItem: React.FC<ColorItemProps> = ({ item }) => {
       key={item.id}
       className="flex flex-col justify-center items-center text-center *:w-full"
     >
-      <div className="capitalize font-bold">{item.label}</div>
       <div
-        className="p-5 flex items-center justify-center"
+        className="text-sm m-1.5 capitalize font-bold whitespace-nowrap overflow-hidden text-ellipsis"
+        title={item.label}
+      >
+        {item.label}
+      </div>
+
+      <div
+        className="p-5 flex items-center justify-center border"
         style={{ backgroundColor: `var(--${item.name})` }}
       />
     </div>

@@ -3,11 +3,8 @@ import React from "react";
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface HeadlineProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  /** Heading level (1-6). Defaults to 1. */
   level?: Level;
-  /** Override the rendered element (for example, render an h2 visually as h1) */
   as?: `h${Level}`;
-  /** Additional CSS class names */
   className?: string;
   children: React.ReactNode;
 }

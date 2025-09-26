@@ -1,4 +1,6 @@
 import ColorItem from "@/components/ds/ColorItem";
+import Headline from "@/components/Headline";
+import { Card, CardContent } from "@/components/ui/card";
 import { v4 as uuidv4 } from "uuid";
 
 const DsPage = () => {
@@ -178,95 +180,147 @@ const DsPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-12">
-      <div>
-        <h2 className="mb-2 text-2xl font-bold">Light theme</h2>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 w-full border light bg-background">
-          <div className="flex flex-col gap-5">
-            <h3>Main</h3>
+    <section className="flex flex-col gap-12 w-full">
+      <Card>
+        <CardContent>
+          <Headline level={2} className="mb-2">
+            Light theme
+          </Headline>
 
-            {mainColors.map((item) => {
-              return <ColorItem item={item} key={item.id} />;
-            })}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full">
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Main
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {mainColors.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Base
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {baseColors.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Chart
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {chartColor.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Components
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {componentsColor.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Sidebar
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {sidebarColor.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="flex flex-col gap-5">
-            <h3>Base</h3>
+      <Card>
+        <CardContent>
+          <Headline level={2} className="mb-2">
+            Dark theme
+          </Headline>
 
-            {baseColors.map((item) => {
-              return <ColorItem item={item} key={item.id} />;
-            })}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full text-foreground">
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Main
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {mainColors.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Base
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {baseColors.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Chart
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {chartColor.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Components
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {componentsColor.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Headline level={4} className="mb-2">
+                Sidebar
+              </Headline>
+
+              <div className="flex flex-col gap-5">
+                {sidebarColor.map((item) => {
+                  return <ColorItem item={item} key={item.id} />;
+                })}
+              </div>
+            </div>
           </div>
-
-          <div className="flex flex-col gap-5">
-            <h3>Chart</h3>
-
-            {chartColor.map((item) => {
-              return <ColorItem item={item} key={item.id} />;
-            })}
-          </div>
-
-          <div className="flex flex-col gap-5">
-            <h3>Components</h3>
-
-            {componentsColor.map((item) => {
-              return <ColorItem item={item} key={item.id} />;
-            })}
-          </div>
-
-          <div className="flex flex-col gap-5">
-            <h3>Sidebar</h3>
-
-            {sidebarColor.map((item) => {
-              return <ColorItem item={item} key={item.id} />;
-            })}
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 w-full border dark text-foreground  bg-background">
-        <div className="flex flex-col gap-5">
-          <h3>Main</h3>
-
-          {mainColors.map((item) => {
-            return <ColorItem item={item} key={item.id} />;
-          })}
-        </div>
-
-        <div className="flex flex-col gap-5">
-          <h3>Base</h3>
-
-          {baseColors.map((item) => {
-            return <ColorItem item={item} key={item.id} />;
-          })}
-        </div>
-
-        <div className="flex flex-col gap-5">
-          <h3>Chart</h3>
-
-          {chartColor.map((item) => {
-            return <ColorItem item={item} key={item.id} />;
-          })}
-        </div>
-
-        <div className="flex flex-col gap-5">
-          <h3>Components</h3>
-
-          {componentsColor.map((item) => {
-            return <ColorItem item={item} key={item.id} />;
-          })}
-        </div>
-
-        <div className="flex flex-col gap-5">
-          <h3>Sidebar</h3>
-
-          {sidebarColor.map((item) => {
-            return <ColorItem item={item} key={item.id} />;
-          })}
-        </div>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+    </section>
   );
 };
 

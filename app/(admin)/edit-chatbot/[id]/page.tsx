@@ -22,6 +22,7 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/Avatar";
+import Headline from "@/components/Headline";
 
 const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
   const { id } = use(params);
@@ -169,33 +170,36 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
           </CardContent>
         </Card>
 
-        <div className="order-first md:order-none md:sticky md:top-0 z-50 md:max-w-sm space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-primary text-primary-foreground w-full">
-          <h1 className="text-sm font-bold">Link to Chat</h1>
+        <Card className="order-first md:order-none md:sticky md:top-0 z-50 md:max-w-sm py-6 rounded-b-lg md:rounded-lg w-full">
+          <CardContent className="px-4">
+            <Headline level={4} className="mb-1.5 border-b pb-0.5">
+              Link to Chat
+            </Headline>
 
-          <p className="text-sm italic">Share link</p>
+            <p className="text-sm italic mb-1.5 font-bold">Share link</p>
 
-          <div className="flex gap-3">
-            <Link
-              href={url}
-              target="_blank"
-              className="w-full cursor-pointer hover:opacity-50"
-            >
-              <Input value={url} readOnly className="cursor-pointer" />
-            </Link>
+            <div className="flex gap-3">
+              <Link
+                href={url}
+                target="_blank"
+                className="w-full cursor-pointer hover:opacity-50 mb-2"
+              >
+                <Input value={url} readOnly className="cursor-pointer" />
+              </Link>
 
-            <Button
-              className="bg-secondary"
-              onClick={() => {
-                navigator.clipboard.writeText(url);
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(url);
 
-                toast.success("Copied to clipboard");
-              }}
-            >
-              <span className="sr-only">Copy</span>
-              <Copy className="size-4" />
-            </Button>
-          </div>
-        </div>
+                  toast.success("Copied to clipboard");
+                }}
+              >
+                <span className="sr-only">Copy</span>
+                <Copy className="size-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
