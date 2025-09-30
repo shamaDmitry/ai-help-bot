@@ -50,11 +50,13 @@ const ReviewSession = async ({ params }: { params: { id: string } }) => {
             </div>
           )}
 
-          <Messages
-            messages={data!.chat_sessions.messages}
-            chatbotName={data!.chat_sessions.chatbots.name}
-            guest={data!.chat_sessions.guests}
-          />
+          <div className="max-w-2xl mx-auto">
+            <Messages
+              messages={data!.chat_sessions.messages}
+              chatbotName={data!.chat_sessions.chatbots.name}
+              guest={data!.chat_sessions.guests}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

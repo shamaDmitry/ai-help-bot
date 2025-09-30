@@ -23,6 +23,7 @@ import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/Avatar";
 import Headline from "@/components/Headline";
+import { notFound } from "next/navigation";
 
 const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
   const { id } = use(params);
@@ -86,12 +87,18 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
         success: "Chatbot deleted",
         error: "Failed to delete chatbot",
       });
+
+      redirect("/view-chatbots");
     } catch {
       toast.error("Failed to delete chatbot");
     }
   };
 
+  if (!data?.chatbots) return notFound();
+
   if (error) return <p>Error: {error.message}</p>;
+
+  console.log("data", data);
 
   return (
     <section className="w-full">
@@ -106,6 +113,7 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
                 className="flex flex-1 gap-3 items-center"
               >
                 <Input
+                  className="border-input"
                   value={chatbotName}
                   onChange={(e) => setChatbotName(e.target.value)}
                 />
@@ -124,7 +132,6 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
                 className=""
                 onClick={() => {
                   handleDelete(id);
-                  redirect("/create-chatbot");
                 }}
                 isLoading={isDeleting}
                 loadingLabel="Deleting"
@@ -142,7 +149,7 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
             <div className="mt-5">
               <AddCharacteristicForm id={id} className="mb-10" />
 
-              <div className="flex">
+              <div className="flex flex-col">
                 {data?.chatbots.chatbot_characteristics.length === 0 && (
                   <div className="w-full py-4 text-sm text-muted-foreground">
                     No characteristics yet — add one to get started.
@@ -151,8 +158,8 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
 
                 <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                   {loading && (
-                    <div className="size-full col-span-2 flex items-center justify-center z-50 cursor-not-allowed bg-sidebar-accent rounded min-h-36">
-                      <LoadingSpinner className="text-sidebar-accent-foreground size-9" />
+                    <div className="size-full border bg-background col-span-2 flex items-center justify-center z-50 cursor-not-allowed rounded min-h-36">
+                      <LoadingSpinner className="text-primary size-9" />
                     </div>
                   )}
 
@@ -170,13 +177,15 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
           </CardContent>
         </Card>
 
-        <Card className="order-first md:order-none md:sticky md:top-0 z-50 md:max-w-sm py-6 rounded-b-lg md:rounded-lg w-full">
+        <Card className="order-first md:order-none md:sticky md:top-4 z-50 md:max-w-sm py-6 rounded-b-lg md:rounded-lg w-full">
           <CardContent className="px-4">
             <Headline level={4} className="mb-1.5 border-b pb-0.5">
               Link to Chat
             </Headline>
 
-            <p className="text-sm italic mb-1.5 font-bold">Share link</p>
+            <p className="text-sm italic mb-1.5 font-bold text-secondary-foreground">
+              Share link
+            </p>
 
             <div className="flex gap-3">
               <Link
@@ -184,7 +193,11 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
                 target="_blank"
                 className="w-full cursor-pointer hover:opacity-50 mb-2"
               >
-                <Input value={url} readOnly className="cursor-pointer" />
+                <Input
+                  value={url}
+                  readOnly
+                  className="cursor-pointer text-secondary-foreground"
+                />
               </Link>
 
               <Button

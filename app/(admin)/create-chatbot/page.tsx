@@ -41,7 +41,7 @@ const CreateChatBot = () => {
         | undefined;
 
       if (chatbot?.id) {
-        router.push(`/edit-chatbot/${chatbot.id}`);
+        router.push(`/view-chatbots/${chatbot.id}`);
       }
     } catch (err) {
       console.error(err);

@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <header className="shadow-sm flex justify-between items-center p-3 flex-col gap-3 md:flex-row border-b border-accent">
       <Link href="/" className="flex items-center text-4xl font-thin gap-2">
-        <div className="p-2 bg-sidebar rounded-full border shadow-md">
+        <div className="p-2 bg-background dark:bg-accent rounded-full border shadow-md">
           <Avatar seed="AI support bot" />
         </div>
 

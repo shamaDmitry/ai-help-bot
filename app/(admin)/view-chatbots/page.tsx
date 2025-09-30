@@ -30,7 +30,7 @@ const ViewChatbots = async () => {
 
   return (
     <div className="w-full">
-      <Card className="min-h-full">
+      <Card>
         <CardContent className="w-full">
           <div className="flex gap-4 flex-col">
             {sortedChatbots.length === 0 && (
@@ -49,11 +49,11 @@ const ViewChatbots = async () => {
                   return (
                     <Link
                       key={chatbot.id}
-                      href={`/edit-chatbot/${chatbot.id}`}
+                      href={`/view-chatbots/${chatbot.id}`}
                       className="w-full"
                     >
-                      <div className="border p-4 rounded hover:bg-accent cursor-pointer flex items-center gap-4 flex-col md:flex-row text-center md:text-left">
-                        <div className="p-2 bg-accent dark:bg-gray-500 rounded-full">
+                      <div className="border p-4 rounded hover:bg-background dark:hover:bg-accent cursor-pointer flex items-center gap-4 flex-col md:flex-row text-center md:text-left">
+                        <div className="p-2 bg-background dark:bg-accent rounded-full shadow-md">
                           <Avatar seed={chatbot.name} className="size-16" />
                         </div>
 

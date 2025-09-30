@@ -257,7 +257,7 @@ const DsPage = () => {
             Dark theme
           </Headline>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full text-foreground">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full dark">
             <div className="flex flex-col">
               <Headline level={4} className="mb-2">
                 Main

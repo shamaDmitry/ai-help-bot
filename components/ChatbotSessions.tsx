@@ -43,12 +43,13 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
           >
             {hasSession ? (
               <>
-                <AccordionTrigger className="cursor-pointer outline-none">
+                <AccordionTrigger className="cursor-pointer outline-none bg-muted items-center px-4">
                   <div className="flex text-left items-center w-full gap-4">
                     <Avatar seed={chatbot.name} className="size-10" />
 
                     <div className="flex flex-1 justify-between gap-4">
-                      <p>{chatbot.name}</p>
+                      <p className="text-lg font-bold">{chatbot.name}</p>
+
                       <p className="font-bold">
                         {chatbot.chat_sessions.length} sessions
                       </p>
@@ -56,7 +57,7 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
                   </div>
                 </AccordionTrigger>
 
-                <AccordionContent className="flex flex-col gap-4">
+                <AccordionContent className="flex flex-col gap-4 pt-4">
                   {chatbot.chat_sessions
                     .sort(
                       (a, b) =>
@@ -68,9 +69,9 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
                         <Link
                           key={session.id}
                           href={`/review-sessions/${session.id}`}
-                          className="py-7 p-7 bg-secondary flex flex-col rounded-lg relative"
+                          className="py-7 p-7 flex flex-col rounded-lg relative border hover:bg-muted"
                         >
-                          <p className="text-lg font-bold">
+                          <p className="text-base font-bold">
                             {session.guests?.name || "Anonymous"}
                           </p>
 
@@ -90,7 +91,15 @@ const ChatbotSessions: FC<ChatbotSessionsProps> = ({ chatbots }) => {
                 </AccordionContent>
               </>
             ) : (
-              <p className="text-sm">{chatbot.name} (No sessions)</p>
+              <div className="p-4 bg-muted rounded-md flex items-center gap-4">
+                <Avatar seed={chatbot.name} className="size-10" />
+
+                <p className="text-base font-bold flex-1 pr-5">
+                  {chatbot.name}
+                </p>
+
+                <strong className="ml-auto">(No sessions)</strong>
+              </div>
             )}
           </AccordionItem>
         );
