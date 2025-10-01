@@ -19,13 +19,13 @@ const AdminLayout = async ({
     <div className="flex flex-col flex-1">
       <Header />
 
-      <div className="flex flex-col flex-1 lg:flex-row">
+      <main className="flex flex-col flex-1 lg:flex-row">
         <Sidebar />
 
         <div className="flex-1 flex justify-center lg:justify-start mx-auto p-4 w-full">
           {children}
         </div>
-      </div>
+      </main>
     </div>
   );
 };

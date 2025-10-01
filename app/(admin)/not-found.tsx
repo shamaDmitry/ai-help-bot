@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <main className="w-full">
+    <section className="w-full">
       <Card className="max-w-2xl mx-auto">
         <CardContent className="flex flex-col items-center justify-center gap-4">
           <Title as="h2" className="text-center">
@@ -17,12 +17,10 @@ export default function NotFound() {
           </p>
 
           <Link href="/" className="w-full">
-            <Button className="w-full" variant="outline">
-              Return home
-            </Button>
+            <Button className="w-full">Return home</Button>
           </Link>
         </CardContent>
       </Card>
-    </main>
+    </section>
   );
 }

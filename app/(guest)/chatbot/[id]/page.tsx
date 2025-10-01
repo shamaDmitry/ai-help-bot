@@ -46,6 +46,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import ChatMessage from "@/components/ChatMessage";
+import LoadingButton from "@/components/ui/loading-button";
 
 const formSchema = z.object({
   message: z.string().min(2, "Message is required"),
@@ -183,7 +184,7 @@ function ChatbotPage() {
   return (
     <div className="w-full max-w-4xl mx-auto h-screen p-10">
       <Card className="min-h-full h-full overflow-y-auto relative gap-0 py-0 border-accent">
-        <CardHeader className="z-50 bg-accent p-4 flex flex-row items-center sticky top-0 left-0">
+        <CardHeader className="z-50 p-4 flex flex-row items-center sticky top-0 left-0">
           <div className="flex items-center justify-center w-full gap-4">
             <Avatar seed={chatBotData?.chatbots?.name} className="size-8" />
 
@@ -210,7 +211,7 @@ function ChatbotPage() {
           <div ref={messageRef} />
         </CardContent>
 
-        <CardFooter className="sticky bottom-0 left-0 bg-accent p-4">
+        <CardFooter className="sticky bottom-0 left-0 p-4">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -289,13 +290,14 @@ function ChatbotPage() {
             </div>
 
             <DialogFooter className="sm:justify-start">
-              <Button
+              <LoadingButton
                 type="submit"
+                isLoading={loading}
+                loadingLabel="Loading..."
                 disabled={!userName || !email || loading}
-                className="w-full sm:w-auto"
               >
-                {loading ? "Loading..." : "Save changes"}
-              </Button>
+                Save changes
+              </LoadingButton>
             </DialogFooter>
           </form>
         </DialogContent>

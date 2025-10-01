@@ -24,7 +24,7 @@ export default function Home() {
             website in minutes.
           </Title>
 
-          <Link href="/create-chatbot" className="">
+          <Link href="/create-chatbot">
             <Button>
               Create bot <CirclePlus />
             </Button>

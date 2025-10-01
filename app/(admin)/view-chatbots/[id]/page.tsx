@@ -94,8 +94,6 @@ const EditChatBot = ({ params }: { params: Promise<{ id: number }> }) => {
     }
   };
 
-  if (!data?.chatbots) return notFound();
-
   if (error) return <p>Error: {error.message}</p>;
 
   console.log("data", data);
